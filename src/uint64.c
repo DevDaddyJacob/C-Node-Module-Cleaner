@@ -260,7 +260,7 @@ char* uint64_toStringHex(UInt64 value) {
 
 char* uint64_toStringDec(UInt64 value) {
     char* output;
-    char buffer[21]; /* Max digits + a terminator */
+    char* buffer;
     int digits = 0;
     int i;
     UInt64 ten = uint64_fromUInt32(10);
@@ -277,6 +277,12 @@ char* uint64_toStringDec(UInt64 value) {
         return output;
     }
 
+    
+    /* Allocate the buffer*/
+    buffer = (char*)malloc(21 * sizeof(char));
+    if (buffer == NULL) return NULL;
+
+
 
     /* Extract digits */
     while (!UINT64_IS_ZERO(value)) {
@@ -289,12 +295,17 @@ char* uint64_toStringDec(UInt64 value) {
 
     /* Reverse the buffer to make the output string */
     output = (char*)malloc((digits + 1) * sizeof(char));
-    if (output == NULL) return NULL;
-
-    for (i = 0; digits >= 0; digits--) {
-        output[i++] = buffer[digits];
+    if (output == NULL) {
+        free(buffer);
+        return NULL;
     }
 
+    for (i = 0, digits = digits - 1; digits >= 0; digits--, i++) {
+        output[i] = buffer[digits];
+    }
+    output[i] = '\0';
+
+    free(buffer);
     return output;
 }
 
