@@ -19,13 +19,13 @@ typedef enum {
     STAGE_PENDING_NODE_MODULE_SORT,
     STAGE_PENDING_DATA_OUTPUT,
 
-    STAGE_POST_RUN,
+    STAGE_POST_RUN
 } ApplicationStage;
 
 typedef enum {
     THREAD_INACTIVE,
     THREAD_ACTIVE,
-    THREAD_COMPLETE,
+    THREAD_COMPLETE
 } AppThreadState;
 
 typedef struct {

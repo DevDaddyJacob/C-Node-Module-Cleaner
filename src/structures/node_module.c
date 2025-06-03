@@ -1,5 +1,6 @@
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <windows.h>
 
 #include "node_module.h"
@@ -98,12 +99,15 @@ static UInt64 countFolderSize(const char* rootPath) {
 
 static FILETIME getFolderLastWriteTime(const char* folderPath) {
     WIN32_FILE_ATTRIBUTE_DATA fileInfo;
+    FILETIME fileTime;
 
     if (GetFileAttributesEx(folderPath, GetFileExInfoStandard, &fileInfo)) {
         return fileInfo.ftLastWriteTime;
     }
 
-    return (FILETIME){ 0, 0 };
+    fileTime.dwLowDateTime = 0;
+    fileTime.dwHighDateTime = 0;
+    return fileTime;
 }
 
 LIST_FUNCTION_RESET(NodeModuleList)
@@ -111,7 +115,6 @@ LIST_FUNCTION_RESET(NodeModuleList)
 LIST_FUNCTION_ALLOC(NodeModuleList)
 
 void writeNodeModuleList(NodeModuleList* list, const char* path) {
-    int i = 0;
     NodeModule* nodeModule = NULL;
 
     if (list->capacity < list->count + 1) { 
@@ -124,7 +127,6 @@ void writeNodeModuleList(NodeModuleList* list, const char* path) {
     
     /* Zero out the fields */
     nodeModule->path = NULL;
-    nodeModule->drive = NULL;
     nodeModule->size = NULL;
     nodeModule->lastWriteTime = NULL;
 
@@ -135,10 +137,10 @@ void writeNodeModuleList(NodeModuleList* list, const char* path) {
         exitWithError(createErrorNoCause(
             ERR_MALLOC_FAILED,
             "node_module.h",
-            "allocNodeModule"
+            "writeNodeModuleList"
         ));
 
-        return NULL; /* Unreachable */
+        return; /* Unreachable */
     }
 
     strcpy(nodeModule->path, path);

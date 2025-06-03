@@ -54,7 +54,7 @@
         \
         \
         /* Reset the list */ \
-        LIST_FUNC_NAME_RESET(listType); \
+        LIST_FUNC_NAME_RESET(listType)(list); \
         \
         \
         /* Free the list pointer */ \

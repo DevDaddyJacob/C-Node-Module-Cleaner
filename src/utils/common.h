@@ -42,7 +42,7 @@ typedef enum {
     SELECT_KEY_LEFT,
     SELECT_KEY_SPACE,
     SELECT_KEY_ENTER,
-    SELECT_KEY_ESCAPE,
+    SELECT_KEY_ESCAPE
 } SelectionKey;
 
 SelectionKey awaitNextSelectionKey();

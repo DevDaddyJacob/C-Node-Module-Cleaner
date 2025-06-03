@@ -17,10 +17,10 @@ typedef struct {
 } UInt64;
 
 #define UINT64_MAX \
-    ((UInt64){ 0xFFFFFFFF, 0xFFFFFFFF })
+    (uint64_fromLowHigh(0xFFFFFFFF, 0xFFFFFFFF))
 
 #define UINT64_MIN \
-    ((UInt64){ 0, 0 })
+    (uint64_fromLowHigh(0, 0))
 
 #define UINT64_ZERO \
     UINT64_MIN
@@ -47,6 +47,8 @@ typedef struct {
     (uint64_compare(a, b) != UINT64_COMPARE_GREATER)
 
 UInt64Comparison uint64_compare(UInt64 a, UInt64 b);
+
+UInt64 uint64_fromLowHigh(UInt32 low, UInt32 high);
 
 UInt64 uint64_fromUInt32(UInt32 value);
 

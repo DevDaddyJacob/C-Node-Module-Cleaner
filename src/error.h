@@ -8,7 +8,7 @@ typedef enum {
     ERR_MALLOC_FAILED,
     ERR_WIN_CALL_FAILURE,
     
-    ERR_NO_DRIVES_FOUND,
+    ERR_NO_DRIVES_FOUND
 } ErrorCode;
 
 typedef struct Error Error;

@@ -20,11 +20,11 @@
  * ==================================================
  */
 
-typedef int (*Comparator)(const void*, const void*);
+typedef int (*Comparator)(void*, void*);
 
-static int compareNodeModuleAsc(const void* a, const void* b);
+static int compareNodeModuleAsc(void* a, void* b);
 
-static int compareNodeModuleDesc(const void* a, const void* b);
+static int compareNodeModuleDesc(void* a, void* b);
 
 static void insertionSort(
     void* base,
@@ -66,9 +66,9 @@ static void blockSort(
  * ==================================================
  */
 
-static int compareNodeModuleAsc(const void* a, const void* b) {
-    const NodeModule* nodeModuleA = (const NodeModule*)a;
-    const NodeModule* nodeModuleB = (const NodeModule*)b;
+static int compareNodeModuleAsc(void* a, void* b) {
+    NodeModule* nodeModuleA = (NodeModule*)a;
+    NodeModule* nodeModuleB = (NodeModule*)b;
 
     return (int)uint64_compare(
         *getNodeModuleSize(nodeModuleA),
@@ -76,9 +76,9 @@ static int compareNodeModuleAsc(const void* a, const void* b) {
     );
 }
 
-static int compareNodeModuleDesc(const void* a, const void* b) {
-    const NodeModule* nodeModuleA = (const NodeModule*)a;
-    const NodeModule* nodeModuleB = (const NodeModule*)b;
+static int compareNodeModuleDesc(void* a, void* b) {
+    NodeModule* nodeModuleA = (NodeModule*)a;
+    NodeModule* nodeModuleB = (NodeModule*)b;
 
     return (int)uint64_compare(
         *getNodeModuleSize(nodeModuleB),

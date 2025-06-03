@@ -8,3 +8,18 @@ This project uses the following skills:
     - Dynamic Arrays
     - Sorting Algorithms (Block Sort)
     - Multi Threading
+
+## Build Output (Release Mode)
+```cmd
+>.\utils\rbuild        
+* gcc -c -o obj/app.o src/app.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/error.o src/error.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/main.o src/main.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/structures/drive_list.o src/structures/drive_list.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/structures/int_list.o src/structures/int_list.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/structures/node_module.o src/structures/node_module.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/structures/sorter.o src/structures/sorter.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/utils/common.o src/utils/common.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -c -o obj/utils/uint64.o src/utils/uint64.c -std=c89 -Wall -Wextra -pedantic -Werror
+* gcc -o bin/NodeModuleCleaner obj/app.o obj/error.o obj/main.o obj/structures/drive_list.o obj/structures/int_list.o obj/structures/node_module.o obj/structures/sorter.o obj/utils/common.o obj/utils/uint64.o -std=c89 -Wall -Wextra -pedantic -Werror
+```

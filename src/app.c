@@ -77,7 +77,7 @@ static ApplicationState* initAppState() {
             "initAppState"
         ));
 
-        return; /* Unreachable */
+        return NULL; /* Unreachable */
     }
     
     
@@ -92,7 +92,7 @@ static ApplicationState* initAppState() {
             "initAppState"
         ));
 
-        return; /* Unreachable */
+        return NULL; /* Unreachable */
     }
 
     initThread(state->displayThread);
@@ -109,7 +109,7 @@ static ApplicationState* initAppState() {
             "initAppState"
         ));
 
-        return; /* Unreachable */
+        return NULL; /* Unreachable */
     }
 
     initThread(state->driveFetchThread);
@@ -287,7 +287,7 @@ void writeToCsv(const char* fileName) {
 }
 
 
-static DWORD WINAPI displayThreadFunc(LPVOID lpParam) {
+static DWORD WINAPI displayThreadFunc() {
     /* If application is in the pre-run state, wait for it to exit */
     while (APP_STATE->stage == STAGE_PRE_RUN) {
         Sleep(1);
@@ -367,7 +367,7 @@ static void displayThread_handleSelectingDrives() {
     int i;
 
     /* Fill the drive state list */
-    APP_STATE->drivesToScan = allocDriveList();
+    APP_STATE->drivesToScan = allocIntList();
     for (i = 0; i < APP_STATE->systemDrives->count; i++) {
         writeIntList(APP_STATE->drivesToScan, 0);
     }
@@ -490,8 +490,9 @@ static void displayThread_handleSearchingDrives() {
 
         /* Handle progress dot updating & speed calc */
         if (refreshes >= 20) {
+            int i;
+
             refreshes = 0;
-            int i = 0;
             progressDotsCount = progressDotsCount == 3 ? 1 : progressDotsCount + 1;
     
             for (i = 1; i <= 3; i++) {
@@ -666,6 +667,7 @@ static void displayThread_handleDataOutputting() {
 
 
 Error* runApplication() {
+    Error* getDrivesError;
     int i = 0;
 
     /* Check if the app is already running */
@@ -684,7 +686,7 @@ Error* runApplication() {
     APP_STATE->stage = STAGE_FETCHING_DRIVES;
 
     APP_STATE->systemDrives = allocDriveList();
-    Error* getDrivesError = getSystemDrives(APP_STATE->systemDrives);
+    getDrivesError = getSystemDrives(APP_STATE->systemDrives);
     if (getDrivesError != NULL) {
         return createError(
             ERR_APPLICATION,

@@ -27,21 +27,21 @@ static void printErrorWithoutCause(Error* error);
  */
 
 const char* ERROR_NAMES[] = {
-    [ERR_UNKNOWN] = "ERR_UNKNOWN",
-    [ERR_APPLICATION] = "ERR_APPLICATION",
-    [ERR_NULL_POINTER] = "ERR_NULL_POINTER",
-    [ERR_MALLOC_FAILED] = "ERR_MALLOC_FAILED",
-    [ERR_WIN_CALL_FAILURE] = "ERR_WIN_CALL_FAILURE",
-    [ERR_NO_DRIVES_FOUND] = "ERR_NO_DRIVES_FOUND",
+    "ERR_UNKNOWN",              /* ERR_UNKNOWN */
+    "ERR_APPLICATION",          /* ERR_APPLICATION */
+    "ERR_NULL_POINTER",         /* ERR_NULL_POINTER */
+    "ERR_MALLOC_FAILED",        /* ERR_MALLOC_FAILED */
+    "ERR_WIN_CALL_FAILURE",     /* ERR_WIN_CALL_FAILURE */
+    "ERR_NO_DRIVES_FOUND",      /* ERR_NO_DRIVES_FOUND */
 };
 
 const char* ERROR_MESSAGES[] = {
-    [ERR_UNKNOWN] = "Encountered an unknown error",
-    [ERR_APPLICATION] = "Encountered an application error",
-    [ERR_NULL_POINTER] = "A pointer value was NULL when it definitely shouldn't have been",
-    [ERR_MALLOC_FAILED] = "Memory allocation via 'malloc' call failed",
-    [ERR_WIN_CALL_FAILURE] = "A call to a windows function failed",
-    [ERR_NO_DRIVES_FOUND] = "No drives were found on the system",
+    "Encountered an unknown error",                                     /* ERR_UNKNOWN */
+    "Encountered an application error",                                 /* ERR_APPLICATION */
+    "A pointer value was NULL when it definitely shouldn't have been",  /* ERR_NULL_POINTER */
+    "Memory allocation via 'malloc' call failed",                       /* ERR_MALLOC_FAILED */
+    "A call to a windows function failed",                              /* ERR_WIN_CALL_FAILURE */
+    "No drives were found on the system",                               /* ERR_NO_DRIVES_FOUND */
 };
 
 

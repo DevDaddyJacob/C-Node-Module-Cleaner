@@ -72,6 +72,14 @@ UInt64Comparison uint64_compare(UInt64 a, UInt64 b) {
     return UINT64_COMPARE_EQUAL;
 }
 
+UInt64 uint64_fromLowHigh(UInt32 low, UInt32 high) {
+    UInt64 output;
+    output.low = low;
+    output.high = high;
+    
+    return output;
+}
+
 UInt64 uint64_fromUInt32(UInt32 value) {
     UInt64 output;
     output.low = value;
