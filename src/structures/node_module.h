@@ -23,8 +23,8 @@ LIST_FUNC_SIGNATURE_FREE(NodeModuleList);
 
 LIST_FUNC_SIGNATURE_READ(NodeModuleList, NodeModule);
 
-UInt64* getSize(NodeModule* nodeModule);
+UInt64* getNodeModuleSize(NodeModule* nodeModule);
 
-UInt64* getLastWriteTime(NodeModule* nodeModule);
+UInt64* getNodeModuleLastWriteTime(NodeModule* nodeModule);
 
 #endif /* h_node_module */

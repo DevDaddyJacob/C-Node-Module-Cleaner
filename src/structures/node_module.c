@@ -152,13 +152,13 @@ LIST_FUNCTION_FREE(NodeModuleList)
 
 LIST_FUNCTION_READ(NodeModuleList, NodeModule)
 
-UInt64* getSize(NodeModule* nodeModule) {
+UInt64* getNodeModuleSize(NodeModule* nodeModule) {
     /* Sanity check */
     if (nodeModule == NULL) {
         exitWithError(createErrorNoCause(
             ERR_NULL_POINTER,
             "node_module.h",
-            "getSize"
+            "getNodeModuleSize"
         ));
 
         return NULL; /* Unreachable */
@@ -177,7 +177,7 @@ UInt64* getSize(NodeModule* nodeModule) {
         exitWithError(createErrorNoCause(
             ERR_MALLOC_FAILED,
             "node_module.h",
-            "getSize"
+            "getNodeModuleSize"
         ));
 
         return NULL; /* Unreachable */
@@ -190,7 +190,7 @@ UInt64* getSize(NodeModule* nodeModule) {
     return nodeModule->size;
 }
 
-UInt64* getLastWriteTime(NodeModule* nodeModule) {
+UInt64* getNodeModuleLastWriteTime(NodeModule* nodeModule) {
     FILETIME fileTime;
 
     /* Sanity check */
@@ -198,7 +198,7 @@ UInt64* getLastWriteTime(NodeModule* nodeModule) {
         exitWithError(createErrorNoCause(
             ERR_NULL_POINTER,
             "node_module.h",
-            "getLastWriteTime"
+            "getNodeModuleLastWriteTime"
         ));
 
         return NULL; /* Unreachable */
@@ -217,7 +217,7 @@ UInt64* getLastWriteTime(NodeModule* nodeModule) {
         exitWithError(createErrorNoCause(
             ERR_MALLOC_FAILED,
             "node_module.h",
-            "getLastWriteTime"
+            "getNodeModuleLastWriteTime"
         ));
 
         return NULL; /* Unreachable */

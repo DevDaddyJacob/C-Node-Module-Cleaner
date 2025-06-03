@@ -269,8 +269,8 @@ void writeToCsv(const char* fileName) {
             filePtr, 
             "%c,%s,%s,%s\n",
             nodeModule->drive,
-            uint64_toStringDec(*getSize(nodeModule)),
-            uint64_toStringDec(*getLastWriteTime(nodeModule)),
+            uint64_toStringDec(*getNodeModuleSize(nodeModule)),
+            uint64_toStringDec(*getNodeModuleLastWriteTime(nodeModule)),
             nodeModule->path
         );
     }
