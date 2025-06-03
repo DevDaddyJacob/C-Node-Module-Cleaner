@@ -6,9 +6,9 @@ typedef unsigned long UInt32;
 #endif
 
 typedef enum {
-    UINT64_COMPARE_LESS,
-    UINT64_COMPARE_EQUAL,
-    UINT64_COMPARE_GREATER,
+    UINT64_COMPARE_LESS = -1,
+    UINT64_COMPARE_EQUAL = 0,
+    UINT64_COMPARE_GREATER = 1
 } UInt64Comparison;
 
 typedef struct {

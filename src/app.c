@@ -9,6 +9,7 @@
 #include "./structures/drive_list.h"
 #include "./structures/int_list.h"
 #include "./structures/node_module.h"
+#include "./structures/sorter.h"
 #include "./utils/common.h"
 #include "./utils/uint64.h"
 
@@ -46,6 +47,10 @@ static void displayThread_handleFetchingDrives();
 static void displayThread_handleSelectingDrives();
 
 static void displayThread_handleSearchingDrives();
+
+static void displayThread_handleDataOutputting();
+
+static void displayThread_handleSortingNodeModules();
 
 
 /*
@@ -254,6 +259,7 @@ void writeToCsv(const char* fileName) {
     int i;
     FILE* filePtr;
 
+
     /* Open file */
     filePtr = fopen(fileName, "w");
 
@@ -300,6 +306,14 @@ static DWORD WINAPI displayThreadFunc(LPVOID lpParam) {
     displayThread_handleSearchingDrives();
 
 
+    /* Handle sorting display */
+    displayThread_handleSortingNodeModules();
+
+
+    /* Handle outputing data */
+    displayThread_handleDataOutputting();
+
+
     return 0;
 }
 
@@ -339,7 +353,6 @@ static void displayThread_handleFetchingDrives() {
 
     reprintf("* Finished fetching drives");
     printf("\n");
-    Sleep(1000);
 
 
     /* Free used memory */
@@ -442,6 +455,7 @@ static void displayThread_handleSearchingDrives() {
     int refreshes = 20;
     int progressDotsCount = 0;
     double timeElapsed = 0.0;
+    UInt64 itemsPerSecond = uint64_fromUInt32(0);
 
     /* Initialize the variables */
     progressDotsStr = (char*)malloc(sizeof(char) * 4);
@@ -466,6 +480,7 @@ static void displayThread_handleSearchingDrives() {
 
 
     /* Handle display */
+    progressDotsStr[0] = '.';
     progressDotsStr[3] = '\0';
     progressDotsCount = 0;
     while (APP_STATE->stage == STAGE_PENDING_DRIVE_SEARCH) {
@@ -473,7 +488,7 @@ static void displayThread_handleSearchingDrives() {
         lastValue = APP_STATE->itemsScanned;
 
 
-        /* Handle progress dot updating */
+        /* Handle progress dot updating & speed calc */
         if (refreshes >= 20) {
             refreshes = 0;
             int i = 0;
@@ -481,6 +496,15 @@ static void displayThread_handleSearchingDrives() {
     
             for (i = 1; i <= 3; i++) {
                 progressDotsStr[i - 1] = i <= progressDotsCount ? '.' : ' ';
+            }
+
+            itemsPerSecond = uint64_divide(
+                lastValue,
+                uint64_fromUInt32(timeElapsed)
+            );
+
+            if (UINT64_GREATER(itemsPerSecond, APP_STATE->itemsScanned)) {
+                itemsPerSecond = uint64_fromUInt32(0);
             }
         }
         
@@ -509,10 +533,7 @@ static void displayThread_handleSearchingDrives() {
         );
         reprintf(
             "  | Scan Speed: %s items / second%15c\n",
-            uint64_toStringDec(uint64_divide(
-                lastValue,
-                uint64_fromUInt32(timeElapsed)
-            )),
+            uint64_toStringDec(itemsPerSecond),
             ' '
         );
 
@@ -545,16 +566,100 @@ static void displayThread_handleSearchingDrives() {
     );
     reprintf(
         "  | Scan Speed: %s items / second%15c\n",
-        uint64_toStringDec(uint64_divide(
-            lastValue,
-            uint64_fromUInt32(timeElapsed)
-        )),
+        uint64_toStringDec(itemsPerSecond),
         ' '
     );
 
 
     printf("\n");
-    Sleep(1000);
+
+    return;
+}
+
+
+static void displayThread_handleSortingNodeModules() {
+    int progressDotsCount;
+    char* progressDotsStr;
+
+    /* Initialize the variables */
+    progressDotsStr = (char*)malloc(sizeof(char) * 4);
+    if (progressDotsStr == NULL) {
+        APP_STATE->displayThread->error = createError(
+            ERR_MALLOC_FAILED,
+            "app.c",
+            "displayThread_handleSortingNodeModules",
+            APP_STATE->displayThread->error
+        );
+
+        return;
+    }
+
+
+    /* Handle display */
+    progressDotsStr[3] = '\0';
+    progressDotsCount = 0;
+    while (APP_STATE->stage == STAGE_PENDING_NODE_MODULE_SORT) {
+        int i = 0;
+        progressDotsCount = progressDotsCount == 3 ? 1 : progressDotsCount + 1;
+
+        for (i = 1; i <= 3; i++) {
+            progressDotsStr[i - 1] = i <= progressDotsCount ? '.' : ' ';
+        }
+        
+        reprintf("* Sorting node modules%s", progressDotsStr);
+        Sleep(750);
+    }
+
+    reprintf("* Finished sorting node modules");
+    printf("\n");
+
+
+    /* Free used memory */
+    free(progressDotsStr);
+
+    return;
+}
+
+
+static void displayThread_handleDataOutputting() {
+    int progressDotsCount;
+    char* progressDotsStr;
+
+    /* Initialize the variables */
+    progressDotsStr = (char*)malloc(sizeof(char) * 4);
+    if (progressDotsStr == NULL) {
+        APP_STATE->displayThread->error = createError(
+            ERR_MALLOC_FAILED,
+            "app.c",
+            "displayThread_handleDataOutputting",
+            APP_STATE->displayThread->error
+        );
+
+        return;
+    }
+
+
+    /* Handle display */
+    progressDotsStr[3] = '\0';
+    progressDotsCount = 0;
+    while (APP_STATE->stage == STAGE_PENDING_DATA_OUTPUT) {
+        int i = 0;
+        progressDotsCount = progressDotsCount == 3 ? 1 : progressDotsCount + 1;
+
+        for (i = 1; i <= 3; i++) {
+            progressDotsStr[i - 1] = i <= progressDotsCount ? '.' : ' ';
+        }
+        
+        reprintf("* Outputting data%s", progressDotsStr);
+        Sleep(750);
+    }
+
+    reprintf("* Finished outputting data");
+    printf("\n");
+
+
+    /* Free used memory */
+    free(progressDotsStr);
 
     return;
 }
@@ -605,10 +710,21 @@ Error* runApplication() {
     }
 
     APP_STATE->scanEnd = clock();
-    APP_STATE->stage = STAGE_DRIVES_SEARCHED;
+    
+    
+    /* Sort our node module data */
+    APP_STATE->stage = STAGE_PENDING_NODE_MODULE_SORT;
+    sortNodeModuleList(APP_STATE->nodeModules, SORT_DESCENDING);
 
 
+    /* Output our data */
+    APP_STATE->stage = STAGE_PENDING_DATA_OUTPUT;
     writeToCsv("./output.csv");
+
+
+    /* Once we are done everything update state as such */
+    APP_STATE->stage = STAGE_POST_RUN;
+    Sleep(250);
 
     
     /* We don't stop until the program is at post run state */
